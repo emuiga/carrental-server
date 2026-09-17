@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# env files — commit .env.example only
+.env
+.env.*
+!.env.example
+
+# Postman collection — keep local only
+*.postman_collection.json
+
+.DS_Store
+npm-debug.log*

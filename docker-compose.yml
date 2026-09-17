@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: car-rental-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: car_rental
+      POSTGRES_USER: car_rental_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - car_rental_pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: car-rental-api
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://car_rental_app:${POSTGRES_PASSWORD}@postgres:5432/car_rental
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 4000
+      FRONTEND_URL: ${FRONTEND_URL}
+    ports:
+      - "4000:4000"
+
+volumes:
+  car_rental_pgdata:
